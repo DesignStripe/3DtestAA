@@ -9,8 +9,6 @@ import studio from "@theatre/studio"
 import extension from "@theatre/r3f/dist/extension"
 import { editable as e, SheetProvider } from "@theatre/r3f"
 
-studio.initialize()
-studio.extend(extension)
 const sceneASheet = getProject("3D Mockup").sheet("SceneA")
 
 function Block({ ...props }) {
@@ -98,6 +96,8 @@ function Mockups() {
 }
 
 export default function SceneA() {
+  useEffect(() => studio.ui.restore(), [])
+
   const canvasRef = useRef(null)
 
   return (

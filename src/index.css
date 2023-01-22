@@ -2,3 +2,15 @@ body {
   margin: 0;
   padding: 0;
 }
+
+a {
+  font-size: 2rem;
+}
+
+a:link {
+  color: grey;
+}
+
+a:visited {
+  color: white;
+}
