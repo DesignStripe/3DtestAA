@@ -135,7 +135,6 @@ export default function SceneA() {
             stencil: false,
             premultipliedAlpha: true,
             antialias: false, // Note: this is done explicitly in EffectComposer
-            logarithmicDepthBuffer: true // Avoids z-fighting on laptop body/screen
         }}
           ref={canvasRef}
           dpr={window.devicePixelRatio}
@@ -143,7 +142,7 @@ export default function SceneA() {
         >
           <SheetProvider sheet={sceneBSheet}>
             <OrbitControls target={[0, 1.5, 0]} />
-            <PerspectiveCamera fov={22} makeDefault position={[-2, 3.45, 2]} />
+            <PerspectiveCamera fov={22} makeDefault position={[-2, 3.45, 2]} near={1} far={50} />
 
             <Mockups />
 
