@@ -2,3 +2,17 @@ body {
   margin: 0;
   padding: 0;
 }
+
+a {
+  font-size: 2rem;
+}
+
+a:link {
+  color: white;
+  text-decoration: none;
+}
+
+a:visited {
+  color: white;
+  text-decoration: none;
+}
