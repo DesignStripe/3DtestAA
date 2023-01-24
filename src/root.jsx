@@ -13,12 +13,12 @@ function Root () {
         margin: 0,
         padding: 0,
         display: 'flex',
-        justifyContent: 'center'
+        justifyContent: 'center',
       }}>
-        <ul style={{}}>
-          <li><Link to='/sceneA'>Scene A - original</Link></li>
-          <li><Link to='/sceneB'>Scene B - sRGB</Link></li>
-          <li><Link to='/sceneC'>Scene C - MSAA test</Link></li>
+        <ul>
+          <li><Link to='/sceneA'>Scene A - original (Linear + SMAA)</Link></li>
+          <li><Link to='/sceneB'>Scene B - modified (sRGB + MSAA)</Link></li>
+          <li><Link to='/sceneC'>Scene C - Lines AA Test</Link></li>
         </ul>
       </div>
     </>

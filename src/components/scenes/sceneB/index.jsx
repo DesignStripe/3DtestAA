@@ -7,16 +7,7 @@ import * as THREE from 'three'
 import { getProject } from '@theatre/core'
 import { SheetProvider } from '@theatre/r3f'
 import studio from '@theatre/studio'
-
-// More Colour Space issues in Postprocessing:
-// https://github.com/pmndrs/postprocessing/issues/370
-// There is an issue in postprocessing with sRGB colour spaces and banding.  See here:
-// https://discourse.threejs.org/t/subtle-colour-banding-issue-looks-like-256-colours-when-using-bloom-with-effect-composer/31174
-// Current postprocessing has performance and colour space problems:
-// https://github.com/pmndrs/postprocessing/issues/419
-
-// Takeaways:
-// 1) MSAA is not applied to a single buffer but to two (very heavy performance impact)
+import { ThreePostprocess } from "../sceneC/ThreePostprocess.js"
 
 const sceneBSheet = getProject('3D Mockup').sheet('SceneB')
 
@@ -36,14 +27,15 @@ function Block({ ...props }) {
   normalTex.repeat.set(2, 2)
 
   useEffect(() => {
-    console.log(materials.Block)
-    materials.Block.metalness = 0.05
-    materials.Block.roughness = 0.7
-    materials.Block.normalScale = new THREE.Vector2(0.4, 0.4)
-    materials.Block.roughnessMap = roughnessTex
-    materials.Block.normalMap = normalTex
-    materials.Block.toneMapped = true
-    materials.Block.color = new THREE.Color('#0e0e0e').convertLinearToSRGB()
+    const blockMat = materials.Block
+    blockMat.metalness = 0.05
+    blockMat.roughness = 0.7
+    blockMat.normalScale = new THREE.Vector2(0.4, 0.4)
+    blockMat.roughnessMap = roughnessTex
+    blockMat.normalMap = normalTex
+    blockMat.color = new THREE.Color('#070707').convertLinearToSRGB()
+    blockMat.envMapIntensity = 0.8
+
     scene.traverse((object) => {
       object.castShadow = true
       object.receiveShadow = true
@@ -59,12 +51,15 @@ function Block({ ...props }) {
 function Laptop({ ...props }) {
   const { scene, materials } = useGLTF('/scene1/macbookLaptop.glb')
   useEffect(() => {
-    materials.Body.roughness = 0.4
+    const colour = new THREE.Color('#282828').convertLinearToSRGB()
+    materials.Body.roughness = 0.45
     materials.Body.metalness = 0.5
-    materials.Body.toneMapped = true
-    materials.BodyScreen.roughness = 0.4
+    materials.Body.dithering = true
+    materials.Body.color = colour
+    materials.BodyScreen.roughness = 0.5
     materials.BodyScreen.metalness = 0.5
-    materials.BodyScreen.toneMapped = true
+    materials.BodyScreen.dithering = true
+    materials.BodyScreen.color = colour
     scene.traverse((object) => {
       object.castShadow = true
       object.receiveShadow = true
@@ -93,24 +88,19 @@ function Screen() {
     <group position={[0.0005, -0.0011, -0.00019]}>
       <mesh geometry={nodes?.Screen?.geometry} position={[0.0005, 1.688, -0.393]}>
         <meshStandardMaterial
-          toneMapped={true}
-          emissive={'grey'}
+          emissive={new THREE.Color('#333').convertLinearToSRGB()}
           emissiveIntensity={1.1}
-          roughness={0.5}
+          roughness={1}
           metalness={0}
         >
           <videoTexture
             attach='map'
             encoding={THREE.sRGBEncoding}
-            generateMipmaps={true}
-            minFilter={THREE.LinearMipMapLinearFilter}
             args={[video]}
           />
           <videoTexture
             attach='emissiveMap'
             encoding={THREE.sRGBEncoding}
-            generateMipmaps={true}
-            minFilter={THREE.LinearMipMapLinearFilter}
             args={[video]}
           />
         </meshStandardMaterial>
@@ -130,21 +120,22 @@ function Mockups() {
   )
 }
 
+const USE_THREE_AA = true
+
 export default function SceneA() {
   useEffect(() => studio.ui.restore(), [])
 
   const canvasRef = useRef(null)
 
-  // See: https://www.donmccurdy.com/2020/06/17/color-management-in-threejs
   return (
     <div style={{ height: '100vh' }}>
       <Suspense fallback={null}>
         <Canvas
           gl={{
-            preserveDrawingBuffer: true,
             stencil: false,
-            physicallyCorrectLights: true,
-            antialias: false // Note: this is done explicitly in EffectComposer
+            premultipliedAlpha: true,
+            antialias: false, // Note: this is done explicitly in EffectComposer
+            logarithmicDepthBuffer: true // Avoids z-fighting on laptop body/screen
         }}
           ref={canvasRef}
           dpr={window.devicePixelRatio}
@@ -153,9 +144,16 @@ export default function SceneA() {
           <SheetProvider sheet={sceneBSheet}>
             <OrbitControls target={[0, 1.5, 0]} />
             <PerspectiveCamera fov={22} makeDefault position={[-2, 3.45, 2]} />
+
             <Mockups />
+
             <Lights />
-            <Effects />
+            {
+              USE_THREE_AA
+              ? <ThreePostprocess dPR={window.devicePixelRatio} samples={8} />
+              : <Effects level={8} />
+            }
+
           </SheetProvider>
         </Canvas>
       </Suspense>

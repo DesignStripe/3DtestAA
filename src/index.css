@@ -8,9 +8,11 @@ a {
 }
 
 a:link {
-  color: grey;
+  color: white;
+  text-decoration: none;
 }
 
 a:visited {
   color: white;
+  text-decoration: none;
 }

@@ -2,7 +2,7 @@ import React from 'react'
 import ReactDOM from 'react-dom/client'
 import { createBrowserRouter, RouterProvider } from 'react-router-dom'
 import './index.css'
-import Root from './Root'
+import Root from './root.jsx'
 import studio from "@theatre/studio"
 import extension from "@theatre/r3f/dist/extension"
 import SceneA from "./components/scenes/sceneA/index.jsx"
