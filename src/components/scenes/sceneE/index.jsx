@@ -60,13 +60,14 @@ const Scene = () => {
         <planeGeometry attach='geometry' args={[4, 4]} />
         <meshStandardMaterial
           attach='material'
-          roughness={0.6}
+          roughness={0.8}
           metalness={0.0}
           normalMap={normal4k}
           roughnessMap={roughness4k}
           normalScale={[0.4, 0.4]}
           side={THREE.DoubleSide}
           color={new THREE.Color('#0b0b0b').convertLinearToSRGB()}
+          envMapIntensity={0.7}
         />
       </mesh>
     </group>
@@ -78,8 +79,8 @@ const Lights = () => {
     <>
       <pointLight
         position={[5, 2, 5]}
-        color={[1, 1, 1]}
-        intensity={140}
+        color={[1, 1, 0.8]}
+        intensity={50}
         shadow-mapSize={[2048, 2048]}
         shadow-bias={-0.0003}
         castShadow={true}
