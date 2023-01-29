@@ -19,6 +19,8 @@ function Root () {
           <li><Link to='/sceneA'>Scene A - original (Linear + SMAA)</Link></li>
           <li><Link to='/sceneB'>Scene B - modified (sRGB + MSAA)</Link></li>
           <li><Link to='/sceneC'>Scene C - Lines AA Test</Link></li>
+          <li><Link to='/sceneD'>Scene D - optimised postprocess + optimised materials + PBR</Link></li>
+          <li><Link to='/sceneE'>Scene E - Rocck.glb + optimised + PBR</Link> </li>
         </ul>
       </div>
     </>

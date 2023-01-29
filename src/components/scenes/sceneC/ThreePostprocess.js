@@ -31,6 +31,8 @@ export function ThreePostprocess({ samples, dPR }) {
     msaaEffect.addPass(colourPass)
     msaaEffect.addPass(gammaPass)
 
+    console.log('setup')
+
     return [renderPass, msaaEffect]
   }, [])
 

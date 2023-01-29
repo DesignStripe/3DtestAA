@@ -36,6 +36,8 @@ function Block({ ...props }) {
     blockMat.color = new THREE.Color('#070707').convertLinearToSRGB()
     blockMat.envMapIntensity = 0.8
 
+    // Add a fresnel term to reduce reflectance at critical angle
+
     scene.traverse((object) => {
       object.castShadow = true
       object.receiveShadow = true
@@ -122,7 +124,7 @@ function Mockups() {
 
 const USE_THREE_AA = true
 
-export default function SceneA() {
+export default function SceneB() {
   useEffect(() => studio.ui.restore(), [])
 
   const canvasRef = useRef(null)

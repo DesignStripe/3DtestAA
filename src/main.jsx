@@ -3,11 +3,13 @@ import ReactDOM from 'react-dom/client'
 import { createBrowserRouter, RouterProvider } from 'react-router-dom'
 import './index.css'
 import Root from './root.jsx'
-import studio from "@theatre/studio"
-import extension from "@theatre/r3f/dist/extension"
-import SceneA from "./components/scenes/sceneA/index.jsx"
-import SceneB from "./components/scenes/sceneB/index.jsx"
-import SceneC from "./components/scenes/sceneC/index.jsx"
+import studio from '@theatre/studio'
+import extension from '@theatre/r3f/dist/extension'
+import SceneA from './components/scenes/sceneA/index.jsx'
+import SceneB from './components/scenes/sceneB/index.jsx'
+import SceneC from './components/scenes/sceneC/index.jsx'
+import SceneD from './components/scenes/sceneD/index.jsx'
+import SceneE from './components/scenes/sceneE/index.jsx'
 
 studio.initialize()
 studio.extend(extension)
@@ -29,6 +31,14 @@ const router = createBrowserRouter([
   {
     path: '/sceneC',
     element: <SceneC />
+  },
+  {
+    path: '/sceneD',
+    element: <SceneD />
+  },
+  {
+    path: '/sceneE',
+    element: <SceneE />
   }
 ])
 
