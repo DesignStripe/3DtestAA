@@ -152,7 +152,7 @@ function Mockups() {
 }
 
 // Change this term to sacrifice quality for speed
-const HIGH_QUALITY = false
+const HIGH_QUALITY = true
 
 export default function SceneD() {
   useEffect(() => studio.ui.restore(), [])
