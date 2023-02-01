@@ -167,7 +167,7 @@ export default function SceneD() {
             stencil: false,
             premultipliedAlpha: true,
             antialias: false
-        }}
+          }}
           ref={canvasRef}
           dpr={window.devicePixelRatio}
           shadows

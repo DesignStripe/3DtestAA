@@ -6,11 +6,10 @@ import { ShaderPass } from 'three/examples/jsm/postprocessing/ShaderPass'
 import { UnrealBloomPass } from 'three/examples/jsm/postprocessing/UnrealBloomPass'
 import { EffectComposer } from 'three/examples/jsm/postprocessing/EffectComposer'
 
-const BasicBlendShader = {
+// Renders a previous Postprocess frame to a quad
+const InsertShader = {
   uniforms: {
-    'tDiffuse': { value: null },
-    'tSecond': { value: null },
-    'opacity': { value: 1.0 }
+    'tResolved': { value: null },
   },
 
   vertexShader: /* glsl */`
@@ -21,13 +20,11 @@ const BasicBlendShader = {
 		}`,
 
   fragmentShader: /* glsl */`
-		uniform float opacity;
-		uniform sampler2D tDiffuse;
-		uniform sampler2D tSecond;
+		uniform sampler2D tResolved;
 		varying vec2 vUv;
 
 		void main() {
-  		gl_FragColor = mix(texture2D(tSecond, vUv), texture2D(tDiffuse, vUv), 0.);
+  		gl_FragColor = texture2D(tResolved, vUv);
 		}`
 };
 
@@ -48,7 +45,7 @@ export function Postprocess({ smaa, samples, dPR, ppType }) {
     if (twoStage) {
       const msRenderTarget = new THREE.WebGLRenderTarget(1, 1, {
         samples,
-        type: THREE.HalfFloatType,
+        type: ppType,
         depthBuffer: true,
         encoding: THREE.LinearEncoding
       })
@@ -67,12 +64,12 @@ export function Postprocess({ smaa, samples, dPR, ppType }) {
     let postprocessComposer = new EffectComposer(gl, ppRenderTarget)
 
     if (effectComposerAA) {
-      const customPass = new ShaderPass(BasicBlendShader)
+      const customPass = new ShaderPass(InsertShader)
       customPass.clear = true
       const bloomPass = new UnrealBloomPass(undefined, 0.1, 0.1, 0.1)
       postprocessComposer.addPass(customPass)
       postprocessComposer.addPass(bloomPass)
-      postprocessComposer.passes[0].uniforms.tSecond.value = effectComposerAA.renderTarget2.texture
+      postprocessComposer.passes[0].uniforms.tResolved.value = effectComposerAA.renderTarget2.texture
       postprocessComposer.renderToScreen = true
     } else {
       const renderPass = new RenderPass(scene, camera)
@@ -91,7 +88,7 @@ export function Postprocess({ smaa, samples, dPR, ppType }) {
     if (composerAA != null) {
       composerAA.setSize(W, H)
       composerAA.setPixelRatio(dPR)
-      composerPP.passes[0].uniforms.tSecond.value = composerAA.renderTarget2.texture
+      composerPP.passes[0].uniforms.tResolved.value = composerAA.renderTarget2.texture
     }
   }, [size, composerAA, composerPP, dPR])
 
